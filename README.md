@@ -1,7 +1,7 @@
-font-framework
+Font Framework
 ==============
 
-Font framework designed to make font deploying faster than light!!
+Font framework designed to make font deploying faster than light!! @Nelson: Haaa-Haaa @Einstein!!
 
 
 ## Instalation
