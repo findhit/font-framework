@@ -1,3 +1,4 @@
+GIT := $(shell which git)
 LS := $(shell which ls)
 TR := $(shell which tr)
 FONTFORGE := $(shell which fontforge)
@@ -14,9 +15,13 @@ all: support build
 support: prepare-src update-framework dependencies-install
 
 update-framework:
-	@git remote | grep framework > /dev/null 2>&1 || git remote add framework https://github.com/findhit/font-framework.git;
-	@git fetch framework;
-	@git rebase framework/master;
+ifeq (,$(GIT))
+	@echo "update-framework: It seems that you don't have git on this computer... Its a must!!";
+else
+	@$(GIT) remote | grep framework > /dev/null 2>&1 || $(GIT) remote add framework https://github.com/findhit/font-framework.git;
+	@$(GIT) fetch framework;
+	@$(GIT) rebase framework/master;
+endif
 
 dependencies-install:
 
