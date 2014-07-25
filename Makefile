@@ -1,12 +1,10 @@
 GIT := $(shell which git)
-LS := $(shell which ls)
-TR := $(shell which tr)
 FONTFORGE := $(shell which fontforge)
 
-PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
-PATH_DIST := $(PATH)/dist
-PATH_SRC := $(PATH)/src
-PATH_TMP := $(PATH)/tmp
+BASE := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+PATH_DIST := $(BASE)/dist
+PATH_SRC := $(BASE)/src
+PATH_TMP := $(BASE)/tmp
 
 .PHONY: all
 all: support build
@@ -18,7 +16,7 @@ update-framework:
 ifeq (,$(GIT))
 	@echo "update-framework: It seems that you don't have git on this computer... Its a must!!";
 else
-	@$(GIT) remote | grep framework > /dev/null 2>&1 || $(GIT) remote add framework https://github.com/findhit/font-framework.git;
+	@$(GIT) remote | grep framework > /dev/null || $(GIT) remote add framework https://github.com/findhit/font-framework.git;
 	@$(GIT) fetch framework;
 	@$(GIT) rebase framework/master;
 endif
@@ -104,22 +102,22 @@ built-tmp-fonts: prepare-src
 	-@rm -fR $(PATH_TMP)/
 	@mkdir -p $(PATH_TMP)/
 
-	@for FAMILY in `$(LS) "$(PATH_SRC)"`; do \
+	@for FAMILY in `ls "$(PATH_SRC)"`; do \
 		PATH_FAMILY="$(PATH_SRC)/$$FAMILY"; \
-		for MEMBER in `$(LS) "$$PATH_FAMILY"`; do \
+		for MEMBER in `ls "$$PATH_FAMILY"`; do \
 			PATH_MEMBER="$$PATH_FAMILY/$$MEMBER"; \
-			for TYPE in `$(LS) "$$PATH_MEMBER"`; do \
+			for TYPE in `ls "$$PATH_MEMBER"`; do \
 				PATH_TYPE="$$PATH_MEMBER/$$TYPE"; \
-		 		for WEIGHT in `$(LS) "$$PATH_TYPE"`; do \
+		 		for WEIGHT in `ls "$$PATH_TYPE"`; do \
 		 			PATH_WEIGHT="$$PATH_TYPE/$$WEIGHT"; \
 		 			WEIGHT="$${WEIGHT}00"; \
 		 			PATH_FONT="$(PATH_TMP)/$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}.sfdir"; \
 		 			[ -f "$${PATH_FONT}" ] && rm -fR "$${PATH_FONT}"; \
 		 			CMDS="New()\n"; \
 		 			CMDS+="SetFontNames(\"$$MEMBER\", \"$$FAMILY\", \"$$FAMILY $$MEMBER $$TYPE\", \"$$WEIGHT\")\n"; \
-		 			for GLYPH in `$(LS) "$$PATH_WEIGHT/glyphs"`; do \
+		 			for GLYPH in `ls "$$PATH_WEIGHT/glyphs"`; do \
 		 				PATH_GLYPH="$$PATH_WEIGHT/glyphs/$$GLYPH"; \
-		 				UNICODE="`echo $$GLYPH | $(TR) -d .svg`"; \
+		 				UNICODE="`echo $$GLYPH | tr -d .svg`"; \
 		 				CMDS+="\n"; \
 		 			done; \
 		 			CMDS+="Save(\"$${PATH_FONT}\")\n"; \
