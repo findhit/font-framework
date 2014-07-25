@@ -1,4 +1,5 @@
 LS := $(shell which ls)
+TR := $(shell which tr)
 FONTFORGE := $(shell which fontforge)
 
 PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -92,23 +93,30 @@ build: clean check build-font build-webfont
 build-font: prepare-dist build-font-svg build-font-ttf build-font-eot build-font-otf build-font-woff
 build-webfont: prepare-dist build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
 
-built-tmp-font-ttfs: prepare-src
+built-tmp-fonts: prepare-src
 
 	-@rm -fR $(PATH_TMP)/
 	@mkdir -p $(PATH_TMP)/
 
-	@for FAMILY in `$(LS) $(PATH_SRC)`; do \
+	@for FAMILY in `$(LS) "$(PATH_SRC)"`; do \
 		PATH_FAMILY="$(PATH_SRC)/$$FAMILY"; \
-		for MEMBER in `$(LS) $$PATH_FAMILY`; do \
+		for MEMBER in `$(LS) "$$PATH_FAMILY"`; do \
 			PATH_MEMBER="$$PATH_FAMILY/$$MEMBER"; \
-			for TYPE in `$(LS) $$PATH_MEMBER`; do \
+			for TYPE in `$(LS) "$$PATH_MEMBER"`; do \
 				PATH_TYPE="$$PATH_MEMBER/$$TYPE"; \
-		 		for WEIGHT in `$(LS) $$PATH_TYPE`; do \
+		 		for WEIGHT in `$(LS) "$$PATH_TYPE"`; do \
 		 			PATH_WEIGHT="$$PATH_TYPE/$$WEIGHT"; \
 		 			WEIGHT="$${WEIGHT}00"; \
+		 			PATH_FONT="$(PATH_TMP)/$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}.sfdir"; \
+		 			[ -f "$${PATH_FONT}" ] && rm -fR "$${PATH_FONT}"; \
 		 			CMDS="New()\n"; \
-		 			\
-		 			CMDS+="Save(\"$(PATH_TMP)/$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}.sfdir\")\n"; \
+		 			CMDS+="SetFontNames(\"$$MEMBER\", \"$$FAMILY\", \"$$FAMILY $$MEMBER $$TYPE\", \"$$WEIGHT\")\n"; \
+		 			for GLYPH in `$(LS) "$$PATH_WEIGHT/glyphs"`; do \
+		 				PATH_GLYPH="$$PATH_WEIGHT/glyphs/$$GLYPH"; \
+		 				UNICODE="`echo $$GLYPH | $(TR) -d .svg`"; \
+		 				CMDS+="\n"; \
+		 			done; \
+		 			CMDS+="Save(\"$${PATH_FONT}\")\n"; \
 		 			echo "$$CMDS" | $(FONTFORGE) > /dev/null; \
 		 		done; \
 		 	done; \
@@ -118,7 +126,7 @@ built-tmp-font-ttfs: prepare-src
 # Commands for building ttf font-format
 ttf: build-ttf
 build-ttf: build-font-ttf build-webfont-ttf
-build-font-ttf: built-tmp-font-ttfs
+build-font-ttf: built-tmp-fonts
 	@echo "Not ready yet... sorry...";
 
 
@@ -129,7 +137,7 @@ build-webfont-ttf:
 # Commands for building eot font-format
 eot: build-eot
 build-eot: build-font-eot build-webfont-eot
-build-font-eot: built-tmp-font-ttfs
+build-font-eot: built-tmp-fonts
 	@echo "Not ready yet... sorry...";
 
 
@@ -140,7 +148,7 @@ build-webfont-eot:
 # Commands for building svg font-format
 svg: build-svg
 build-svg: build-font-svg build-webfont-svg
-build-font-svg: built-tmp-font-ttfs
+build-font-svg: built-tmp-fonts
 	@echo "Not ready yet... sorry...";
 
 
@@ -150,7 +158,7 @@ build-webfont-svg:
 # Commands for building otf font-format
 otf: build-otf
 build-otf: build-font-otf build-webfont-otf
-build-font-otf: built-tmp-font-ttfs
+build-font-otf: built-tmp-fonts
 	@echo "Not ready yet... sorry...";
 
 
@@ -160,7 +168,7 @@ build-webfont-otf:
 # Commands for building woff font-format
 woff: build-woff
 build-woff: build-font-woff build-webfont-woff
-build-font-woff: built-tmp-font-ttfs
+build-font-woff: built-tmp-fonts
 	@echo "Not ready yet... sorry...";
 
 
