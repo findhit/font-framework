@@ -17,6 +17,7 @@ Font framework is a multi-[family, type and weight] builder to help you on font 
 
 ## Why should i use it?
 
+Before all, you only need this Makefile!
 This is the framework we use at our headquarters to build and organize our fonts (some of them are open-source, you're welcome to make them better and/or use them).
 Major problems on fonts developing are the ammount of configurations that you have to do before developing, this skips that process by detecting what you have to build it right away!
 
