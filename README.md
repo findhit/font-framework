@@ -6,7 +6,7 @@ Font framework is a multi-[family, type and weight] builder to help you on font 
 
 ## Instalation / How do i build a font?
 
-* Fork this repo and change the name to `font-[fontname]`
+* Fork this repo and change the name to `font-[SomeCoolName]` (If you're gonna to develop one family, it should be it's name)
 * Clone your forked repo on your computer
 * Open a terminal on your repo
 * When you have your fork on your computer, you should met the dependencies by dooing `make support`
