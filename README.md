@@ -4,35 +4,74 @@ Font Framework
 Font framework designed to make font deploying faster than light!! @Nelson: Haaa-Haaa @Einstein!!
 
 
-## Instalation
+## Instalation / How do i build a font?
 
 * Fork this repo and change the name to `font-[fontname]`
 * Clone your forked repo on your computer
 * Open a terminal on your repo
-* Run `make support skeleton` - This will:
-	* install all the things it needs for developing on your computer;
-	* create a skeleton structure for you to work on
-* Create your font glyphs
-* Run `make build` to get your font files :)
+* When you have your fork on your computer, you should met the dependencies by dooing `make support`
+* Since Font Framework is now ready to deploy, you could jump the task of structure preparation by running `make skeleton`, this should create a skeleton structure for you to work on!
+* Create your font glyphs on right places
+* Run `make build` to get your font files, your builded fonts should be now on `dist/` folder :)
 
 
 ## Why should i use it?
 
-Its fairly easy to implement any font on this and make it available as a print font or as a webfont.
+This is the framework we use at our headquarters to build and organize our fonts (some of them are open-source, you're welcome to make them better and/or use them).
+Major problems on fonts developing are the ammount of configurations that you have to do before developing, this skips that process by detecting what you have to build it right away!
 
 
 ## How does it work?
 
-You can give a peek on some examples [here](#changeme) to learn how to organize your font. If you follow our simple folder/files structure, building the font should be easy as 1,2...3!! If you don't like to peek examples, use our skeleton, follow Instalation instructions...
+You can give a peek on some examples [here](#changeme) to learn how to organize your font. If you follow our simple folder/files structure, building the font should be easy as 1,2...3!! If you don't like to peek examples, use our skeleton generator by running `make skeleton`...
 
 
-## How do i build a font?
+### Folder / Files structure
 
-* You should fork this repo first before starting the creation your own font.
-* When you have your fork on your computer, you should met the dependencies by dooing `make support`
-* The better is always in the middle, DEVELOPING YOUR FONT!!! :)
-* Once you got right you just have to type one command: `make magic`
-* Your builded fonts should be now on `dist/` folder
+	* **dist/** - this should hold all builded fonts
+	* **src/**
+		* **[family]/** - Font Family name. Ex: Arial, helvetica, Times New Roman (wow)
+			* **[member]/** - Font Family member name. Ex: default, black, sans-serif, serif...
+				* **[type]/** - Type of font. Ex: regular, italic, icon...
+					* **[weight]/** - Weight of font: 1 to 9, 1 means 100, 2 means 200, and so on...
+						* **glyphs/**
+							* [unicode]-[name].svg - file with paths for glyph
+						* [space reserved for further configuration]
+	* README.md - You should replace our README.md with yours, but don't forget credits to **Font Framework**!! :D
+
+### Example structure with 2 families
+	
+	* dist/ (Builded)
+		* font-arial-black-italic-200.ttf
+		* font-arial-black-italic-500.otf
+		* font-arial-black-italic-800.svg
+		* font-helvetica-xpto-regular-200.ttf
+		* font-helvetica-xpto-regular-200.woff
+		* webfont-arial-black-italic-200.ttf
+		* webfont-arial-black-italic-500.otf
+		* webfont-arial-black-italic-800.svg
+		* webfont-helvetica-xpto-regular-200.ttf
+		* webfont-helvetica-xpto-regular-200.woff
+	* src/
+		* arial/
+			* black/
+				* italic/
+					* 2/
+						* glyphs/
+							* ...
+					* 5/
+						* glyphs/
+							* ...
+					* 8/
+						* glyphs/
+							* ...
+		* helvetica
+			* xpto/
+				* regular/
+					* 2/
+						* glyphs/
+							* ...
+	* README.md
 
 
 ### What are the commands that i could use?
