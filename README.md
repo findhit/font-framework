@@ -3,6 +3,19 @@ font-framework
 
 Font framework designed to make font deploying faster than light!!
 
+
+## Instalation
+
+* Fork this repo and change the name to `font-[fontname]`
+* Clone your forked repo on your computer
+* Open a terminal on your repo
+* Run `make support skeleton` - This will:
+	* install all the things it needs for developing on your computer;
+	* create a skeleton structure for you to work on
+* Create your font glyphs
+* Run `make build` to get your font files :)
+
+
 ## Why should i use it?
 
 Its fairly easy to implement any font on this and make it available as a print font or as a webfont.
@@ -10,7 +23,7 @@ Its fairly easy to implement any font on this and make it available as a print f
 
 ## How does it work?
 
-You can give a peek on some examples [here](#changeme) to learn how to organize your font. If you follow our simple folder/files structure, building the font should be easy as 1,2...3!!
+You can give a peek on some examples [here](#changeme) to learn how to organize your font. If you follow our simple folder/files structure, building the font should be easy as 1,2...3!! If you don't like to peek examples, use our skeleton, follow Instalation instructions...
 
 
 ## How do i build a font?
@@ -26,6 +39,7 @@ You can give a peek on some examples [here](#changeme) to learn how to organize 
 
 * `make` or `make all`- This does the same as `make support && make magic`
 * `make support` - You should run this in case of some error non related with you
+* `make skeleton` - This generates a structure for you start working on your font!
 * `make check` - This checks and makes sure that everything is right to be built
 * `make build` - Builds printing font and web font versions
 * `make build-font` - Builds printing font version
