@@ -74,7 +74,7 @@ If you don't want to support IE 8 and lower, and iOS 4 and lower, and android, t
 
 ## What is the difference between font and webfont?
 
-There are some points that makes a font not only usefull for web but required too, there are:
+There are some points that makes a font not only usefull for web but also required too:
 
 * On web, compressed assets are a requirement! The simplest way to compress more is to suppress the less, in other words, you MUST strip everything that you aren't using on a font, **font-framework** doest that for you, everytime you build! :)
 * Icons, a long time ago icons were loaded as individual images, thats fine for any developer, but not for persons with slow internet. So someone had the clever idea of trapping all images on one image only and called it `css sprite`, since they were divided by css `background-position`. That was fine too but what about icons with different colours and sizes? And retina displays? Oh man, another sprite and icons? Thats were font-based icons comes in! You could develop a font of icons using **font-framework** too, or use one of the coverted examples... For instance, you could check [FontAwesome](#changeme)
