@@ -46,12 +46,12 @@ endif
 
 skeleton:
 	# We must drive some changes here yet
-	mkdir -p $(PATH_SRC)/example/sans-serif/2/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/4/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/7/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/2/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/4/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/7/glyphs
+	@mkdir -p $(PATH_SRC)/example/sans-serif/2/glyphs
+	@mkdir -p $(PATH_SRC)/example/sans-serif/4/glyphs
+	@mkdir -p $(PATH_SRC)/example/sans-serif/7/glyphs
+	@mkdir -p $(PATH_SRC)/example/serif/2/glyphs
+	@mkdir -p $(PATH_SRC)/example/serif/4/glyphs
+	@mkdir -p $(PATH_SRC)/example/serif/7/glyphs
 
 	@echo "We've created an example skeleton for you!!";
 	@echo "If you want to build it, run: make build";
@@ -60,10 +60,12 @@ skeleton:
 # Prepare commands
 
 prepare-src:
-	mkdir -p $(PATH_SRC)
+	@echo "Preparing src/";
+	@mkdir -p $(PATH_SRC)
 
 prepare-dist:
-	mkdir -p $(PATH_DIST)
+	@echo "Preparing dist/";
+	@mkdir -p $(PATH_DIST)
 
 # Clean things
 clean: clean-src clean-dist
@@ -78,6 +80,7 @@ clean-dist:
 
 # Check things
 check:
+	@echo "Checking if it can be built";
 	@echo "Not ready yet... sorry...";
 
 
