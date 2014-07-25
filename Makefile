@@ -1,4 +1,11 @@
 
+PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+PATH_DIST := $(PATH)/dist
+PATH_DIST_FONT := $(PATH)/dist/font
+PATH_DIST_WEBFONT := $(PATH)/dist/webfont
+PATH_SRC := $(PATH)/src
+
+
 all: support build
 .PHONY: all
 
@@ -9,11 +16,32 @@ support: git-upstream-rebase install-dependencies
 git-upstream-rebase:
 install-dependencies:
 
-# General build commands
-build: check build-font build-webfont
-build-font: build-font-eot build-font-svg build-font-ttf build-font-otf build-font-woff
-build-webfont: build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
+# Clean things
+clean: clean-font clean-webfont
+clean-font:
+	rm -fR $(PATH_DIST_FONT)/
+clean-webfont:
+	rm -fR $(PATH_DIST_WEBFONT)/
 
+
+# Check things
+check:
+
+
+
+# General build commands
+build: clean check build-font build-webfont
+build-font: prepare-font build-font-eot build-font-svg build-font-ttf build-font-otf build-font-woff
+build-webfont: prepare-webfont build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
+
+prepare-dist:
+	mkdir -p $(PATH_DIST)
+
+prepare-font: prepare-dist
+	mkdir -p $(PATH_DIST_FONT)
+
+prepare-webfont: prepare-dist
+	mkdir -p $(PATH_DIST_WEBFONT)
 
 # Commands for building eot font-format
 eot: build-eot
