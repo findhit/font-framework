@@ -1,4 +1,5 @@
 LS := $(shell which ls)
+FONTFORGE := $(shell which fontforge)
 
 PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PATH_DIST := $(PATH)/dist
@@ -105,7 +106,10 @@ built-tmp-font-ttfs: prepare-src
 		 		for WEIGHT in `$(LS) $$PATH_TYPE`; do \
 		 			PATH_WEIGHT="$$PATH_TYPE/$$WEIGHT"; \
 		 			WEIGHT="$${WEIGHT}00"; \
-		 			echo "$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}"; \
+		 			CMDS="New()\n"; \
+		 			\
+		 			CMDS+="Save(\"$(PATH_TMP)/$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}.sfdir\")\n"; \
+		 			echo "$$CMDS" | $(FONTFORGE) > /dev/null; \
 		 		done; \
 		 	done; \
 		 done; \
