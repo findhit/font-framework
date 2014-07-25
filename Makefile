@@ -11,11 +11,12 @@ PATH_TMP := $(PATH)/tmp
 all: support build
 
 # Support commands
-support: prepare-src git-upstream-rebase dependencies-install
+support: prepare-src update-framework dependencies-install
 
-git-upstream-rebase:
-	@echo "Not ready yet... sorry...";
-
+update-framework:
+	@git remote | grep framework > /dev/null 2>&1 || git remote add framework https://github.com/findhit/font-framework.git;
+	@git fetch framework;
+	@git rebase framework/master;
 
 dependencies-install:
 
