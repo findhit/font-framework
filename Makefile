@@ -1,8 +1,6 @@
 
 PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PATH_DIST := $(PATH)/dist
-PATH_DIST_FONT := $(PATH)/dist/font
-PATH_DIST_WEBFONT := $(PATH)/dist/webfont
 PATH_SRC := $(PATH)/src
 
 .PHONY: all
@@ -47,8 +45,17 @@ endif
 endif
 
 skeleton:
-	@echo "Not ready yet... sorry...";
+	# We must drive some changes here yet
+	mkdir -p $(PATH_SRC)/example/sans-serif/2/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/4/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/7/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/2/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/4/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/7/glyphs
 
+	@echo "We've created an example skeleton for you!!";
+	@echo "If you want to build it, run: make build";
+	@echo "Otherwise, you could clean **src/** folder by running: make clean-src";
 
 # Prepare commands
 
@@ -58,18 +65,15 @@ prepare-src:
 prepare-dist:
 	mkdir -p $(PATH_DIST)
 
-prepare-font: prepare-dist
-	mkdir -p $(PATH_DIST_FONT)
-
-prepare-webfont: prepare-dist
-	mkdir -p $(PATH_DIST_WEBFONT)
-
 # Clean things
-clean: clean-font clean-webfont
-clean-font:
-	rm -fR $(PATH_DIST_FONT)/
-clean-webfont:
-	rm -fR $(PATH_DIST_WEBFONT)/
+clean: clean-src clean-dist
+clean-src:
+	@echo "Heyyy!!! Did you mean that you want to clean all the SOURCES!?!? Are you really sure?? If yes write on upper case [YES I DO]:"
+	@read TMP; if [ "$$TMP" == "YES I DO" ]; then \
+		rm -fR $(PATH_SRC)/*; \
+	fi
+clean-dist:
+	rm -fR $(PATH_DIST)/*
 
 
 # Check things
@@ -79,8 +83,8 @@ check:
 
 # General build commands
 build: clean check build-font build-webfont
-build-font: prepare-font build-font-eot build-font-svg build-font-ttf build-font-otf build-font-woff
-build-webfont: prepare-webfont build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
+build-font: prepare-dist build-font-eot build-font-svg build-font-ttf build-font-otf build-font-woff
+build-webfont: prepare-dist build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
 
 # Commands for building eot font-format
 eot: build-eot

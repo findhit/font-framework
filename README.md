@@ -1,7 +1,7 @@
 Font Framework
 ==============
 
-Font framework designed to make font deploying faster than light!! @Nelson: Haaa-Haaa @Einstein!!
+Font framework is a multi-[family, type and weight] builder to help you on font deploying, making it faster than light!! **@Nelson: Haaa-Haaa @Einstein!!**
 
 
 ## Instalation / How do i build a font?
