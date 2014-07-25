@@ -1,7 +1,9 @@
+LS := $(shell which ls)
 
 PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PATH_DIST := $(PATH)/dist
 PATH_SRC := $(PATH)/src
+PATH_TMP := $(PATH)/tmp
 
 .PHONY: all
 all: support build
@@ -46,12 +48,15 @@ endif
 
 skeleton:
 	# We must drive some changes here yet
-	@mkdir -p $(PATH_SRC)/example/sans-serif/2/glyphs
-	@mkdir -p $(PATH_SRC)/example/sans-serif/4/glyphs
-	@mkdir -p $(PATH_SRC)/example/sans-serif/7/glyphs
-	@mkdir -p $(PATH_SRC)/example/serif/2/glyphs
-	@mkdir -p $(PATH_SRC)/example/serif/4/glyphs
-	@mkdir -p $(PATH_SRC)/example/serif/7/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/regular/2/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/regular/4/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/regular/7/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/italic/2/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/italic/4/glyphs
+	mkdir -p $(PATH_SRC)/example/sans-serif/italic/7/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/regular/2/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/regular/4/glyphs
+	mkdir -p $(PATH_SRC)/example/serif/regular/7/glyphs
 
 	@echo "We've created an example skeleton for you!!";
 	@echo "If you want to build it, run: make build";
@@ -60,12 +65,10 @@ skeleton:
 # Prepare commands
 
 prepare-src:
-	@echo "Preparing src/";
-	@mkdir -p $(PATH_SRC)
+	mkdir -p $(PATH_SRC)
 
 prepare-dist:
-	@echo "Preparing dist/";
-	@mkdir -p $(PATH_DIST)
+	mkdir -p $(PATH_DIST)
 
 # Clean things
 clean: clean-src clean-dist
@@ -80,19 +83,49 @@ clean-dist:
 
 # Check things
 check:
-	@echo "Checking if it can be built";
 	@echo "Not ready yet... sorry...";
 
 
 # General build commands
 build: clean check build-font build-webfont
-build-font: prepare-dist build-font-eot build-font-svg build-font-ttf build-font-otf build-font-woff
+build-font: prepare-dist build-font-svg build-font-ttf build-font-eot build-font-otf build-font-woff
 build-webfont: prepare-dist build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
+
+built-tmp-font-ttfs: prepare-src
+
+	-@rm -fR $(PATH_TMP)/
+	@mkdir -p $(PATH_TMP)/
+
+	@for FAMILY in `$(LS) $(PATH_SRC)`; do \
+		PATH_FAMILY="$(PATH_SRC)/$$FAMILY"; \
+		for MEMBER in `$(LS) $$PATH_FAMILY`; do \
+			PATH_MEMBER="$$PATH_FAMILY/$$MEMBER"; \
+			for TYPE in `$(LS) $$PATH_MEMBER`; do \
+				PATH_TYPE="$$PATH_MEMBER/$$TYPE"; \
+		 		for WEIGHT in `$(LS) $$PATH_TYPE`; do \
+		 			PATH_WEIGHT="$$PATH_TYPE/$$WEIGHT"; \
+		 			WEIGHT="$${WEIGHT}00"; \
+		 			echo "$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}"; \
+		 		done; \
+		 	done; \
+		 done; \
+	done;
+
+# Commands for building ttf font-format
+ttf: build-ttf
+build-ttf: build-font-ttf build-webfont-ttf
+build-font-ttf: built-tmp-font-ttfs
+	@echo "Not ready yet... sorry...";
+
+
+build-webfont-ttf:
+	@echo "Not ready yet... sorry...";
+
 
 # Commands for building eot font-format
 eot: build-eot
 build-eot: build-font-eot build-webfont-eot
-build-font-eot:
+build-font-eot: built-tmp-font-ttfs
 	@echo "Not ready yet... sorry...";
 
 
@@ -103,29 +136,17 @@ build-webfont-eot:
 # Commands for building svg font-format
 svg: build-svg
 build-svg: build-font-svg build-webfont-svg
-build-font-svg:
+build-font-svg: built-tmp-font-ttfs
 	@echo "Not ready yet... sorry...";
 
 
 build-webfont-svg:
 	@echo "Not ready yet... sorry...";
 
-
-# Commands for building ttf font-format
-ttf: build-ttf
-build-ttf: build-font-ttf build-webfont-ttf
-build-font-ttf:
-	@echo "Not ready yet... sorry...";
-
-
-build-webfont-ttf:
-	@echo "Not ready yet... sorry...";
-
-
 # Commands for building otf font-format
 otf: build-otf
 build-otf: build-font-otf build-webfont-otf
-build-font-otf:
+build-font-otf: built-tmp-font-ttfs
 	@echo "Not ready yet... sorry...";
 
 
@@ -135,7 +156,7 @@ build-webfont-otf:
 # Commands for building woff font-format
 woff: build-woff
 build-woff: build-font-woff build-webfont-woff
-build-font-woff:
+build-font-woff: built-tmp-font-ttfs
 	@echo "Not ready yet... sorry...";
 
 
