@@ -40,29 +40,45 @@ ifeq ($(UNAME_S),Darwin)
 	# Install brew if not installed
 ifeq (,$(shell which brew))
 	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
-	brew install ruby
-	brew install python
+	@brew install ruby python
 endif
 
 	# Update packages
-	brew update
+	@brew update
 
 	# Install packages
-	brew install fontforge ttfautohint ttf2eot
+	@brew install fontforge || brew reinstall fontforge
+	@brew install ttfautohint || brew reinstall ttfautohint
+	@brew install ttf2eot || brew reinstall ttf2eot
 
 endif
 
 skeleton:
-	# We must drive some changes here yet
-	mkdir -p $(PATH_SRC)/example/sans-serif/regular/2/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/regular/4/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/regular/7/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/italic/2/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/italic/4/glyphs
-	mkdir -p $(PATH_SRC)/example/sans-serif/italic/7/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/regular/2/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/regular/4/glyphs
-	mkdir -p $(PATH_SRC)/example/serif/regular/7/glyphs
+define SKELETON
+example/sans-serif/regular/2 \
+example/sans-serif/regular/4 \
+example/sans-serif/regular/7 \
+example/sans-serif/italic/2 \
+example/sans-serif/italic/4 \
+example/sans-serif/italic/7 \
+example/serif/regular/2 \
+example/serif/regular/4 \
+example/serif/regular/7
+endef
+
+# We must drive some changes here yet
+	@for x in $(SKELETON); do \
+		mkdir -p "$(PATH_SRC)/$${x}/glyphs"; \
+	done
+
+# for each one we will create glyphs from resources
+	@if [ -f "$(BASE)/resources/glyph-baseline.svg" ]; then \
+		for x in $(SKELETON); do \
+			for g in 0041 0042 0043 0061 0062 0063; do \
+				cp "resources/glyph-baseline.svg" "$(PATH_SRC)/$${x}/glyphs/$${g}.svg"; \
+			done \
+		done \
+	fi
 
 	@echo "We've created an example skeleton for you!!";
 	@echo "If you want to build it, run: make build";
@@ -122,7 +138,7 @@ built-tmp-fonts: prepare-src
 		 			for GLYPH in `ls "$$PATH_WEIGHT/glyphs"`; do \
 		 				PATH_GLYPH="$$PATH_WEIGHT/glyphs/$$GLYPH"; \
 		 				UNICODE="`echo $$GLYPH | tr -d .svg`"; \
-		 				CMDS+="Select( \"$$UNICODE\" )\n"; \
+		 				CMDS+="Select( 0u$$UNICODE )\n"; \
 		 				CMDS+="Import( \"$$PATH_GLYPH\", 16 )\n"; \
 		 			done; \
 		 			CMDS+="Save(\"$${PATH_FONT}\")\n"; \
