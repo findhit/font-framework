@@ -93,11 +93,12 @@ check:
 
 
 # General build commands
-build: clean check build-font build-webfont
+build: check build-font build-webfont
 build-font: prepare-dist build-font-svg build-font-ttf build-font-eot build-font-otf build-font-woff
 build-webfont: prepare-dist build-webfont-eot build-webfont-svg build-webfont-ttf build-webfont-otf build-webfont-woff
 
 built-tmp-fonts: prepare-src
+	@echo "Generating fonts:";
 
 	-@rm -fR $(PATH_TMP)/
 	@mkdir -p $(PATH_TMP)/
@@ -113,12 +114,16 @@ built-tmp-fonts: prepare-src
 		 			WEIGHT="$${WEIGHT}00"; \
 		 			PATH_FONT="$(PATH_TMP)/$${FAMILY}-$${MEMBER}-$${TYPE}-$${WEIGHT}.sfdir"; \
 		 			[ -f "$${PATH_FONT}" ] && rm -fR "$${PATH_FONT}"; \
+		 			\
+		 			echo " - $${FAMILY} $${MEMBER} $${TYPE} $${WEIGHT}"; \
+		 			\
 		 			CMDS="New()\n"; \
 		 			CMDS+="SetFontNames(\"$$MEMBER\", \"$$FAMILY\", \"$$FAMILY $$MEMBER $$TYPE\", \"$$WEIGHT\")\n"; \
 		 			for GLYPH in `ls "$$PATH_WEIGHT/glyphs"`; do \
 		 				PATH_GLYPH="$$PATH_WEIGHT/glyphs/$$GLYPH"; \
 		 				UNICODE="`echo $$GLYPH | tr -d .svg`"; \
-		 				CMDS+="\n"; \
+		 				CMDS+="Select( \"$$UNICODE\" )\n"; \
+		 				CMDS+="Import( \"$$PATH_GLYPH\", 16 )\n"; \
 		 			done; \
 		 			CMDS+="Save(\"$${PATH_FONT}\")\n"; \
 		 			echo "$$CMDS" | $(FONTFORGE) > /dev/null; \
