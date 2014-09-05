@@ -96,7 +96,7 @@ prepare-dist:
 clean: clean-src clean-dist
 clean-src:
 	@echo "Heyyy!!! Did you mean that you want to clean all the SOURCES!?!? Are you really sure?? If yes write on upper case [YES I DO]:"
-	@read TMP; if [ "$$TMP" == "YES I DO" ]; then \
+	@read TMP; if [ "$$TMP" = "YES I DO" ]; then \
 		rm -fR $(PATH_SRC)/*; \
 	fi
 clean-dist:
