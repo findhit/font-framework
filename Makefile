@@ -5,6 +5,7 @@ BASE := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PATH_DIST := $(BASE)/dist
 PATH_SRC := $(BASE)/src
 PATH_TMP := $(BASE)/tmp
+UNAME_S := $(shell uname -s)
 
 .PHONY: all
 all: support build
@@ -30,8 +31,9 @@ ifeq ($(UNAME_S),Linux)
 	sudo apt-get -y update
 
 	# Install packages
-	sudo apt-get -y install fontforge ttfautohint ttf2eot
-
+	sudo apt-get -y install fontforge ttfautohint npm
+	npm config set registry http://registry.npmjs.org/
+	npm install -g ttf2eot
 endif
 
 # Mac OS
@@ -41,6 +43,8 @@ ifeq ($(UNAME_S),Darwin)
 ifeq (,$(shell which brew))
 	ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 	@brew install ruby python
+	npm config set registry http://registry.npmjs.org/
+	npm install -g ttf2eot
 endif
 
 	# Update packages
@@ -96,7 +100,7 @@ prepare-dist:
 clean: clean-src clean-dist
 clean-src:
 	@echo "Heyyy!!! Did you mean that you want to clean all the SOURCES!?!? Are you really sure?? If yes write on upper case [YES I DO]:"
-	@read TMP; if [ "$$TMP" == "YES I DO" ]; then \
+	@read TMP; if [ "$$TMP" = "YES I DO" ]; then \
 		rm -fR $(PATH_SRC)/*; \
 	fi
 clean-dist:
